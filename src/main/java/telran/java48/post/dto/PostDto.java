@@ -21,7 +21,7 @@ public class PostDto {
     String author;
     LocalDateTime dateCreated;
     @Singular
-    Set<String> tags;
+    Set< String> tags;
     Integer likes;
     @Singular
     List<CommentDto> comments;
