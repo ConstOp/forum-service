@@ -33,33 +33,32 @@ public class AccountingController {
 		return accountingService.login();
 	}
 
-	@DeleteMapping("/user/{user}")
+	@DeleteMapping("/user/{login}")
 	public UserDto deleteUser(@PathVariable String login) {
 		return accountingService.deleteUser(login);
 	}
 
-	@PutMapping("/user/{user}")
+	@PutMapping("/user/{login}")
 	public UserDto updateUser(@PathVariable String login, @RequestBody UserUpdateDto userUpdate) {
 		return accountingService.updateUser(login, userUpdate);
 	}
 
-	@PutMapping("/user/{user}/role/{role}")
+	@PutMapping("/user/{login}/role/{role}")
 	public UserRoleDto addRole(@PathVariable String login, @PathVariable String role) {
-		return accountingService.addRole(login, role);
+		return accountingService.changeRole(login, role, true);
 	}
 
-	@DeleteMapping("/user/{user}/role/{role}")
+	@DeleteMapping("/user/{login}/role/{role}")
 	public UserRoleDto deleteRole(@PathVariable String login, @PathVariable String role) {
-		accountingService.deleteRole(login, role);
-		return null;
+		return accountingService.changeRole(login, role, false);
 	}
 
 	@PutMapping("/password")
 	public void changePassword() {
-		accountingService.changePassword();
+		
 	}
 
-	@GetMapping(("/user/{user}"))
+	@GetMapping(("/user/{login}"))
 	public UserDto getUser(@PathVariable String login) {
 		return accountingService.getUser(login);
 	}

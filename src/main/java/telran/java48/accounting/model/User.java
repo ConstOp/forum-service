@@ -14,15 +14,20 @@ import lombok.Setter;
 @Getter
 @EqualsAndHashCode
 @Document(collection = "users")
-@NoArgsConstructor
 public class User {
 	@Id
 	String login;
 	@Setter
+	String passwordString;
+	@Setter
 	String firstName;
 	@Setter
 	String lastName;
-	Set<String> roles = new HashSet<>();
+	Set<String> roles;
+
+	public User() {
+		roles = new HashSet<>();
+	}
 
 	public User(String login, String firstName, String lastName) {
 		super();

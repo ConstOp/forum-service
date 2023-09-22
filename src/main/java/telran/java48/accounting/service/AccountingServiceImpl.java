@@ -9,8 +9,8 @@ import telran.java48.accounting.dto.UserDto;
 import telran.java48.accounting.dto.UserRegisterDto;
 import telran.java48.accounting.dto.UserRoleDto;
 import telran.java48.accounting.dto.UserUpdateDto;
-import telran.java48.accounting.exceptions.UserConflictException;
-import telran.java48.accounting.exceptions.UserNotFoundException;
+import telran.java48.accounting.dto.exceptions.UserConflictException;
+import telran.java48.accounting.dto.exceptions.UserNotFoundException;
 import telran.java48.accounting.model.User;
 
 @Service
@@ -22,9 +22,10 @@ public class AccountingServiceImpl implements AccountingService {
 	@Override
 	public UserDto register(UserRegisterDto userRegister) {
 		if (userRepository.existsById(userRegister.getLogin())) {
-			new UserConflictException();
+			throw new UserConflictException();
 		}
 		User user = modelMapper.map(userRegister, User.class);
+		user.addRole("USER");
 		userRepository.save(user);
 		return modelMapper.map(user, UserDto.class);
 	}
@@ -49,9 +50,10 @@ public class AccountingServiceImpl implements AccountingService {
 			user.setFirstName(userUpdate.getFirstName());
 		}
 		if (userUpdate.getLastName() != null) {
-			user.setLastName(userUpdate.getFirstName());
+			user.setLastName(userUpdate.getLastName());
 		}
-		return null;
+		userRepository.save(user);
+		return modelMapper.map(user, UserDto.class);
 	}
 
 	@Override
@@ -69,16 +71,31 @@ public class AccountingServiceImpl implements AccountingService {
 	}
 
 	@Override
-	public void changePassword() {
-		// TODO Auto-generated method stub
-
+	public void changePassword(String login, String newPassword) {
+		User user = userRepository.findById(login).orElseThrow(() -> new UserNotFoundException());
+		user.setPasswordString(newPassword);
+		userRepository.save(user);
 	}
 
 	@Override
 	public UserDto getUser(String login) {
-		User user = userRepository.findById(login).orElseThrow(()->new UserNotFoundException());
-		System.out.println(user);
+		User user = userRepository.findById(login).orElseThrow(() -> new UserNotFoundException());
 		return modelMapper.map(user, UserDto.class);
+	}
+
+	@Override
+	public UserRoleDto changeRole(String login, String role, boolean isAddRole) {
+		User user = userRepository.findById(login).orElseThrow(() -> new UserNotFoundException());
+		boolean res;
+		if (isAddRole) {
+			res = user.addRole(role);
+		} else {
+			res = user.removeRole(role);
+		}
+		if (res) {
+			userRepository.save(user);
+		}
+		return modelMapper.map(user, UserRoleDto.class);
 	}
 
 }

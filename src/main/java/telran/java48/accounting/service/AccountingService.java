@@ -14,11 +14,13 @@ public interface AccountingService {
 
 	UserDto updateUser(String login, UserUpdateDto userUpdate);
 
+	UserRoleDto changeRole(String login, String role, boolean isAddRole);
+
 	UserRoleDto addRole(String login, String role);
 
 	UserRoleDto deleteRole(String login, String role);
 
-	void changePassword();
+	void changePassword(String login, String newPassword);
 
 	UserDto getUser(String login);
 
