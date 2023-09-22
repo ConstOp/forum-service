@@ -18,7 +18,7 @@ public class User {
 	@Id
 	String login;
 	@Setter
-	String passwordString;
+	String password;
 	@Setter
 	String firstName;
 	@Setter
@@ -29,9 +29,10 @@ public class User {
 		roles = new HashSet<>();
 	}
 
-	public User(String login, String firstName, String lastName) {
+	public User(String login, String password, String firstName, String lastName) {
 		super();
 		this.login = login;
+		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		roles.add("USER");
