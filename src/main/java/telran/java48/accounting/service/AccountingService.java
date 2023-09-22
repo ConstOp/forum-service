@@ -8,8 +8,6 @@ import telran.java48.accounting.dto.UserUpdateDto;
 public interface AccountingService {
 	UserDto register(UserRegisterDto userRegister);
 
-	UserDto login();
-
 	UserDto deleteUser(String login);
 
 	UserDto updateUser(String login, UserUpdateDto userUpdate);
