@@ -5,18 +5,14 @@ import telran.java48.accounting.dto.UserRegisterDto;
 import telran.java48.accounting.dto.UserRoleDto;
 import telran.java48.accounting.dto.UserUpdateDto;
 
-public interface AccountingService {
+public interface UserAccountService {
 	UserDto register(UserRegisterDto userRegister);
 
 	UserDto deleteUser(String login);
 
 	UserDto updateUser(String login, UserUpdateDto userUpdate);
 
-	UserRoleDto changeRole(String login, String role, boolean isAddRole);
-
-	UserRoleDto addRole(String login, String role);
-
-	UserRoleDto deleteRole(String login, String role);
+	UserRoleDto changeRoleList(String login, String role, boolean isAddRole);
 
 	void changePassword(String login, String newPassword);
 

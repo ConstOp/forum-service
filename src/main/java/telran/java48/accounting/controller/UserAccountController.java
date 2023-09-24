@@ -19,18 +19,18 @@ import telran.java48.accounting.dto.UserDto;
 import telran.java48.accounting.dto.UserRegisterDto;
 import telran.java48.accounting.dto.UserRoleDto;
 import telran.java48.accounting.dto.UserUpdateDto;
-import telran.java48.accounting.service.AccountingService;
+import telran.java48.accounting.service.UserAccountService;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/account")
-public class AccountingController {
+@RequiredArgsConstructor
+public class UserAccountController {
 
-	final AccountingService accountingService;
+	final UserAccountService userAccountService;
 
 	@PostMapping("/register")
 	public UserDto register(@RequestBody UserRegisterDto userRegister) {
-		return accountingService.register(userRegister);
+		return userAccountService.register(userRegister);
 	}
 
 	@PostMapping("/login")
@@ -40,33 +40,33 @@ public class AccountingController {
 
 	@DeleteMapping("/user/{login}")
 	public UserDto deleteUser(@PathVariable String login) {
-		return accountingService.deleteUser(login);
+		return userAccountService.deleteUser(login);
 	}
 
 	@PutMapping("/user/{login}")
 	public UserDto updateUser(@PathVariable String login, @RequestBody UserUpdateDto userUpdate) {
-		return accountingService.updateUser(login, userUpdate);
+		return userAccountService.updateUser(login, userUpdate);
 	}
 
 	@PutMapping("/user/{login}/role/{role}")
 	public UserRoleDto addRole(@PathVariable String login, @PathVariable String role) {
-		return accountingService.changeRole(login, role, true);
+		return userAccountService.changeRoleList(login, role, true);
 	}
 
 	@DeleteMapping("/user/{login}/role/{role}")
 	public UserRoleDto deleteRole(@PathVariable String login, @PathVariable String role) {
-		return accountingService.changeRole(login, role, false);
+		return userAccountService.changeRoleList(login, role, false);
 	}
 
 	@PutMapping("/password")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void changePassword(Principal principal, @RequestHeader("X-Password") String newPassword) {
-		accountingService.changePassword(principal.getName(), newPassword);
+		userAccountService.changePassword(principal.getName(), newPassword);
 	}
 
 	@GetMapping(("/user/{login}"))
 	public UserDto getUser(@PathVariable String login) {
-		return accountingService.getUser(login);
+		return userAccountService.getUser(login);
 	}
 
 }
