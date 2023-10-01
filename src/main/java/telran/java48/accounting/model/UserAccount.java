@@ -13,6 +13,7 @@ import lombok.Setter;
 
 @Getter
 @EqualsAndHashCode
+@NoArgsConstructor
 @Document(collection = "users")
 public class UserAccount {
 	@Id
@@ -23,11 +24,11 @@ public class UserAccount {
 	String firstName;
 	@Setter
 	String lastName;
-	Set<String> roles;
+	Set<String> roles = new HashSet<>();
 
-	public UserAccount() {
-		roles = new HashSet<>();
-	}
+//	public UserAccount() { //It doesn't work correctly for me. Why?
+//		roles = new HashSet<>();
+//	}
 
 	public UserAccount(String login, String password, String firstName, String lastName) {
 		super();
