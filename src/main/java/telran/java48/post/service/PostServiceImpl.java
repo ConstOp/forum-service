@@ -4,12 +4,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.mindrot.jbcrypt.BCrypt;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import telran.java48.accounting.dao.UserAccountRepository;
 import telran.java48.post.dao.PostRepository;
 import telran.java48.post.dto.DatePeriodDto;
 import telran.java48.post.dto.NewCommentDto;
