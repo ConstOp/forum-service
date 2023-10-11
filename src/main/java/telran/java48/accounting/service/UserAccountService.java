@@ -4,6 +4,7 @@ import telran.java48.accounting.dto.UserDto;
 import telran.java48.accounting.dto.UserRegisterDto;
 import telran.java48.accounting.dto.UserRoleDto;
 import telran.java48.accounting.dto.UserUpdateDto;
+import telran.java48.security.model.Role;
 
 public interface UserAccountService {
 	UserDto register(UserRegisterDto userRegister);

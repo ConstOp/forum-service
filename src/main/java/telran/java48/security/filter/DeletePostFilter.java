@@ -2,8 +2,6 @@ package telran.java48.security.filter;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.List;
-import java.util.stream.Stream;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -14,19 +12,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.core.annotation.Order;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import telran.java48.accounting.dao.UserAccountRepository;
+import telran.java48.accounting.model.UserAccount;
 import telran.java48.post.dao.PostRepository;
-import telran.java48.post.dto.exceptions.PostNotFoundException;
 import telran.java48.post.model.Post;
+import telran.java48.security.model.Role;
+import telran.java48.security.model.User;
 
 @Component
 @RequiredArgsConstructor
-@Order(50)
-public class UpdateByPostOwnerFilter implements Filter {
+@Order(60)
+public class DeletePostFilter implements Filter {
+
 	final PostRepository postRepository;
 
 	@Override
@@ -35,13 +36,15 @@ public class UpdateByPostOwnerFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
-			Principal principal = request.getUserPrincipal();
-			Post post = postRepository.findById(getLastStringInPath(request)).orElse(null);
+			User user = (User) request.getUserPrincipal();
+			String[] arr = request.getServletPath().split("/");
+			String postId = arr[arr.length - 1];
+			Post post = postRepository.findById(postId).orElse(null);
 			if (post == null) {
 				response.sendError(404);
 				return;
 			}
-			if (!principal.getName().equalsIgnoreCase(post.getAuthor())) {
+			if (!(user.getName().equalsIgnoreCase(post.getAuthor())) || user.getRoles().contains(Role.MODERATOR)) {
 				response.sendError(403);
 				return;
 			}
@@ -50,12 +53,6 @@ public class UpdateByPostOwnerFilter implements Filter {
 	}
 
 	private boolean checkEndPoint(String method, String path) {
-		return HttpMethod.PUT.matches(method) && path.matches("/forum/post/\\w+/?");
+		return HttpMethod.DELETE.matches(method) && path.matches("/account/user/\\w+/?");
 	}
-
-	private String getLastStringInPath(HttpServletRequest request) {
-		String[] arr = request.getServletPath().split("/");
-		return arr[arr.length - 1];
-	}
-
 }

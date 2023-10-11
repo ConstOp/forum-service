@@ -2,6 +2,8 @@ package telran.java48.security.filter;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Stream;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,17 +14,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.core.annotation.Order;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import telran.java48.post.dao.PostRepository;
+import telran.java48.post.dto.exceptions.PostNotFoundException;
 import telran.java48.post.model.Post;
 
 @Component
 @RequiredArgsConstructor
-@Order(60)
-public class PutByAuthenticationUser implements Filter {
+@Order(50)
+public class UpdatePostFilter implements Filter {
 	final PostRepository postRepository;
 
 	@Override
@@ -31,14 +35,15 @@ public class PutByAuthenticationUser implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
-			String[] path = request.getServletPath().split("/");
-			Post post = postRepository.findById(path[3]).orElse(null);
+			Principal principal = request.getUserPrincipal();
+			String[] arr = request.getServletPath().split("/");
+			String postId = arr[arr.length - 1];
+			Post post = postRepository.findById(postId).orElse(null);
 			if (post == null) {
 				response.sendError(404);
 				return;
 			}
-			Principal principal = request.getUserPrincipal();
-			if (!principal.getName().equalsIgnoreCase(path[path.length - 1])) {
+			if (!principal.getName().equalsIgnoreCase(post.getAuthor())) {
 				response.sendError(403);
 				return;
 			}
@@ -47,6 +52,6 @@ public class PutByAuthenticationUser implements Filter {
 	}
 
 	private boolean checkEndPoint(String method, String path) {
-		return HttpMethod.PUT.matches(method) && path.matches("/forum/post/\\w+/comment/\\w+/?");
+		return HttpMethod.PUT.matches(method) && path.matches("/forum/post/\\w+/?");
 	}
 }

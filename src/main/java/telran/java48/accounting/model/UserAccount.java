@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import telran.java48.security.model.Role;
 
 @Getter
 @EqualsAndHashCode
@@ -24,7 +25,7 @@ public class UserAccount {
 	String firstName;
 	@Setter
 	String lastName;
-	Set<String> roles = new HashSet<>();
+	Set<Role> roles = new HashSet<>();
 
 //	public UserAccount() { //It doesn't work correctly for me. Why?
 //		roles = new HashSet<>();
@@ -38,11 +39,11 @@ public class UserAccount {
 		this.lastName = lastName;
 	}
 
-	public boolean addRole(String role) {
+	public boolean addRole(Role role) {
 		return roles.add(role);
 	}
 
-	public boolean removeRole(String role) {
+	public boolean removeRole(Role role) {
 		return roles.remove(role);
 	}
 }

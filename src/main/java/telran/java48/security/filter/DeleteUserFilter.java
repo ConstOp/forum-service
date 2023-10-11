@@ -18,16 +18,13 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import telran.java48.accounting.dao.UserAccountRepository;
 import telran.java48.accounting.model.UserAccount;
-import telran.java48.post.dao.PostRepository;
-import telran.java48.post.model.Post;
+import telran.java48.security.model.Role;
+import telran.java48.security.model.User;
 
 @Component
 @RequiredArgsConstructor
-@Order(55)
-public class ModeratorManagingPostsFilter implements Filter {
-
-	final PostRepository postRepository;
-	final UserAccountRepository userAccountRepository;
+@Order(40)
+public class DeleteUserFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
@@ -35,14 +32,10 @@ public class ModeratorManagingPostsFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
-			Principal principal = request.getUserPrincipal();
-			Post post = postRepository.findById(getLastStringInPath(request)).orElse(null);
-			if (post == null) {
-				response.sendError(404);
-				return;
-			}
-			UserAccount userAccount = userAccountRepository.findById(principal.getName()).get();
-			if (!post.getAuthor().equalsIgnoreCase(principal.getName()) && !userAccount.getRoles().contains("MODERATOR")) {
+			User user = (User) request.getUserPrincipal();
+			String[] arr = request.getServletPath().split("/");
+			String userName = arr[arr.length - 1];
+			if (!(user.getRoles().contains(Role.ADMINISTRATOR) || user.getName().equalsIgnoreCase(userName))) {
 				response.sendError(403);
 				return;
 			}
@@ -51,11 +44,7 @@ public class ModeratorManagingPostsFilter implements Filter {
 	}
 
 	private boolean checkEndPoint(String method, String path) {
-		return HttpMethod.DELETE.matches(method) && path.matches("/forum/post/\\w+/?");
+		return HttpMethod.DELETE.matches(method) && path.matches("/account/user/\\w+/?");
 	}
-	
-	private String getLastStringInPath(HttpServletRequest request) {
-		String[] arr = request.getServletPath().split("/");
-		return arr[arr.length - 1];
-	}
+
 }

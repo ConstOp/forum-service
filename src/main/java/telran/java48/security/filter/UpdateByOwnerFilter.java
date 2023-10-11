@@ -28,7 +28,7 @@ public class UpdateByOwnerFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) resp;
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
 			Principal principal = request.getUserPrincipal();
-			if(!principal.getName().equalsIgnoreCase(getLastStringInPath(request))) {
+			if (!principal.getName().equalsIgnoreCase(getLastStringInPath(request))) {
 				response.sendError(403);
 				return;
 			}
@@ -37,9 +37,10 @@ public class UpdateByOwnerFilter implements Filter {
 	}
 
 	private boolean checkEndPoint(String method, String path) {
-		boolean putMethodEndPointAccountUser = HttpMethod.PUT.matches(method) && path.matches("/account/user/\\w+/?");
-		boolean postMethodEndPointForumPost = HttpMethod.POST.matches(method) && path.matches("/forum/post/\\w+/?");
-		return putMethodEndPointAccountUser || postMethodEndPointForumPost;
+		return (HttpMethod.PUT.matches(method) && path.matches("/account/user/\\w+/?"))
+				|| (HttpMethod.POST.matches(method) && path.matches("/forum/post/\\w+/?"))
+				|| (HttpMethod.PUT.matches(method) && path.matches("/forum/post/\\w+/comment/\\w+/?"));
+
 	}
 
 	private String getLastStringInPath(HttpServletRequest request) {
