@@ -29,7 +29,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 			throw new UserExistsException();
 		}
 		UserAccount userAccount = modelMapper.map(userRegister, UserAccount.class);
-		userAccount.addRole(Role.USER);
+		userAccount.addRole("USER");
 		String password = BCrypt.hashpw(userRegister.getPassword(), BCrypt.gensalt());
 		userAccount.setPassword(password);
 		userAccountRepository.save(userAccount);
@@ -74,18 +74,13 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 	public UserRoleDto changeRoleList(String login, String role, boolean isAddRole) {
 		UserAccount userAccount = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
 		boolean res;
-		try {
-			Role roleEnum = Role.valueOf(role.toUpperCase());
-			if (isAddRole) {
-				res = userAccount.addRole(roleEnum);
-			} else {
-				res = userAccount.removeRole(roleEnum);
-			}
-			if (res) {
-				userAccountRepository.save(userAccount);
-			}
-		} catch (IllegalArgumentException e) {
-			throw new UserRoleException();
+		if (isAddRole) {
+			res = userAccount.addRole(role.toUpperCase());
+		} else {
+			res = userAccount.removeRole(role.toUpperCase());
+		}
+		if(res) {
+			userAccountRepository.save(userAccount);
 		}
 		return modelMapper.map(userAccount, UserRoleDto.class);
 	}
@@ -95,9 +90,9 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 		if (!userAccountRepository.existsById("admin")) {
 			String password = BCrypt.hashpw("admin", BCrypt.gensalt());
 			UserAccount userAccount = new UserAccount("admin", password, "", "");
-			userAccount.addRole(Role.USER);
-			userAccount.addRole(Role.MODERATOR);
-			userAccount.addRole(Role.ADMINISTRATOR);
+			userAccount.addRole("USER");
+			userAccount.addRole("MODERATOR");
+			userAccount.addRole("ADMINISTRATOR");
 			userAccountRepository.save(userAccount);
 		}
 	}

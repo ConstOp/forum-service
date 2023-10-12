@@ -25,7 +25,7 @@ public class UserAccount {
 	String firstName;
 	@Setter
 	String lastName;
-	Set<Role> roles = new HashSet<>();
+	Set<String> roles = new HashSet<>();
 
 //	public UserAccount() { //It doesn't work correctly for me. Why?
 //		roles = new HashSet<>();
@@ -39,11 +39,11 @@ public class UserAccount {
 		this.lastName = lastName;
 	}
 
-	public boolean addRole(Role role) {
+	public boolean addRole(String role) {
 		return roles.add(role);
 	}
 
-	public boolean removeRole(Role role) {
+	public boolean removeRole(String role) {
 		return roles.remove(role);
 	}
 }

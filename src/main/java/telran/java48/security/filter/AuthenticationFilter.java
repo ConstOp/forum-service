@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Base64;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -77,9 +78,9 @@ public class AuthenticationFilter implements Filter {
 
 	private class WrappedRequest extends HttpServletRequestWrapper {
 		String login;
-		Set<Role> roles;
+		Set<String> roles;
 
-		public WrappedRequest(HttpServletRequest request, String login, Set<Role> roles) {
+		public WrappedRequest(HttpServletRequest request, String login, Set<String> roles) {
 			super(request);
 			this.login = login;
 			this.roles = roles;

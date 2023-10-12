@@ -33,7 +33,7 @@ public class AdminManagingRolesFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) resp;
 		if (checkEndPoint(request.getMethod(), request.getServletPath())) {
 			User user = (User) request.getUserPrincipal();
-			if(!user.getRoles().contains(Role.ADMINISTRATOR)) {
+			if(!user.getRoles().contains("ADMINISTRATOR")) {
 				response.sendError(403);
 				return;
 			}
