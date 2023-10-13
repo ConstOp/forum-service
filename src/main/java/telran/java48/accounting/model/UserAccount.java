@@ -10,7 +10,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import telran.java48.security.model.Role;
 
 @Getter
 @EqualsAndHashCode
