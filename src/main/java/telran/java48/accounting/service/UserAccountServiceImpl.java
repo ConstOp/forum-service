@@ -1,5 +1,7 @@
 package telran.java48.accounting.service;
 
+import java.time.LocalDate;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,7 +62,9 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 		UserAccount userAccount = userAccountRepository.findById(login).orElseThrow(UserNotFoundException::new);
 		String password = passwordEncoder.encode(newPassword);
 		userAccount.setPassword(password);
+		userAccount.setPasswordChangeDate(LocalDate.now().plusMonths(2));
 		userAccountRepository.save(userAccount);
+
 	}
 
 	@Override
@@ -78,7 +82,7 @@ public class UserAccountServiceImpl implements UserAccountService, CommandLineRu
 		} else {
 			res = userAccount.removeRole(role.toUpperCase());
 		}
-		if(res) {
+		if (res) {
 			userAccountRepository.save(userAccount);
 		}
 		return modelMapper.map(userAccount, UserRoleDto.class);

@@ -1,5 +1,7 @@
 package telran.java48.security;
 
+import java.time.LocalDate;
+
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +22,16 @@ public class UserDelailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserAccount userAccount = userAccountRepository.findById(username)
 				.orElseThrow(() -> new UsernameNotFoundException(username));
-		String[] roles = userAccount.getRoles().stream().map(r -> "ROLE_" + r.toUpperCase()).toArray(String[]::new);
-		return new User(username, userAccount.getPassword(), AuthorityUtils.createAuthorityList(roles));
+		String[] roles = userAccount.getRoles()
+				.stream()
+				.map(r -> "ROLE_" + r.toUpperCase())
+				.toArray(String[]::new);
+//		return new User(username, userAccount.getPassword(), AuthorityUtils.createAuthorityList(roles));
+		boolean credentialsNonExpired = true;
+		if(LocalDate.now().isAfter(userAccount.getPasswordChangeDate())) {
+			credentialsNonExpired = false;
+		}
+		return new User(username, userAccount.getPassword(), true, true, credentialsNonExpired, true, AuthorityUtils.createAuthorityList(roles));
 	}
 
 }

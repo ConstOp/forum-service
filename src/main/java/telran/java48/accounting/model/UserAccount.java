@@ -1,5 +1,6 @@
 package telran.java48.accounting.model;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +14,6 @@ import lombok.Setter;
 
 @Getter
 @EqualsAndHashCode
-@NoArgsConstructor
 @Document(collection = "users")
 public class UserAccount {
 	@Id
@@ -24,11 +24,15 @@ public class UserAccount {
 	String firstName;
 	@Setter
 	String lastName;
+	@Setter
+	LocalDate passwordChangeDate;
 	Set<String> roles = new HashSet<>();
 
-//	public UserAccount() { //It doesn't work correctly for me. Why?
-//		roles = new HashSet<>();
-//	}
+	public UserAccount() {
+		roles = new HashSet<>();
+//		passwordChangeDate = LocalDate.now().plusMonths(1);
+		passwordChangeDate = LocalDate.now();
+	}
 
 	public UserAccount(String login, String password, String firstName, String lastName) {
 		super();
