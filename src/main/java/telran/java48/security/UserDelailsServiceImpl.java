@@ -3,7 +3,6 @@ package telran.java48.security;
 import java.time.LocalDate;
 
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import telran.java48.accounting.dao.UserAccountRepository;
 import telran.java48.accounting.model.UserAccount;
+import telran.java48.security.model.UserAuth;
 
 @Service
 @RequiredArgsConstructor
@@ -26,12 +26,11 @@ public class UserDelailsServiceImpl implements UserDetailsService {
 				.stream()
 				.map(r -> "ROLE_" + r.toUpperCase())
 				.toArray(String[]::new);
-//		return new User(username, userAccount.getPassword(), AuthorityUtils.createAuthorityList(roles));
-		boolean credentialsNonExpired = true;
-		if(LocalDate.now().isAfter(userAccount.getPasswordChangeDate())) {
-			credentialsNonExpired = false;
+		boolean passwordExpiratonDate = true;
+		if(LocalDate.now().isAfter(userAccount.getPasswordExpiratonDate())) {
+			passwordExpiratonDate = false;
 		}
-		return new User(username, userAccount.getPassword(), true, true, credentialsNonExpired, true, AuthorityUtils.createAuthorityList(roles));
+		return new UserAuth(username, userAccount.getPassword(), AuthorityUtils.createAuthorityList(roles), passwordExpiratonDate);
 	}
 
 }

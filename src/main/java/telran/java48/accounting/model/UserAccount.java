@@ -25,13 +25,11 @@ public class UserAccount {
 	@Setter
 	String lastName;
 	@Setter
-	LocalDate passwordChangeDate;
+	LocalDate passwordExpiratonDate;
 	Set<String> roles = new HashSet<>();
 
 	public UserAccount() {
 		roles = new HashSet<>();
-//		passwordChangeDate = LocalDate.now().plusMonths(1);
-		passwordChangeDate = LocalDate.now();
 	}
 
 	public UserAccount(String login, String password, String firstName, String lastName) {
@@ -49,4 +47,5 @@ public class UserAccount {
 	public boolean removeRole(String role) {
 		return roles.remove(role);
 	}
+	
 }
