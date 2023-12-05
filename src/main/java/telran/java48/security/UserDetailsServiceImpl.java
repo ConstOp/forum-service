@@ -15,7 +15,7 @@ import telran.java48.security.model.UserAuth;
 
 @Service
 @RequiredArgsConstructor
-public class UserDelailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 	final UserAccountRepository userAccountRepository;
 
 	@Override
